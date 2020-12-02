@@ -9,14 +9,14 @@
         <div class="side-inner">
           <div class="form-group" style="width: 25%; margin-left: 20px;">
               <select class="form-control form-control-xs" @change="getProducts($event.target.value)">
-                <option v-for="(cur, index) in currency" :key="index">{{ cur }}</option>
+                <option v-for="(cur, index) in currency" :selected="(cur === currentCurrency) ? currentCurrency : ''" :key="index">{{ cur }}</option>
               </select>
           </div>
           <cart-item  v-for="(cart, index) in cartItems" :key="index" :index="index" :cart="cart"/>
           <div class="m-3 sidebar-footer">
               <div class="total border-top py-1">
                 <p style="color: black;">Subtotal
-                  <span class="pull-right"><strong class="total-price">${{ totalAmount }}</strong></span>
+                  <span class="pull-right"><strong class="total-price">{{ currentCurrency }} {{ totalAmount }}</strong></span>
                 </p>
               </div>
               <a href="#" class="btn btn-subscription rounded-0 btn-block mb-2">MAKE THIS A SUBSCRIPTION (SAVE 20%)</a>
@@ -47,10 +47,11 @@ export default Vue.extend({
   computed: {
     ...mapGetters('carts',[
       'totalAmount','cartItems'
-    ])
-  },
-  created() {
-    console.log(this.cartItems);
+    ]),
+
+    ...mapState([
+      'currentCurrency'
+    ]),
   },
   components: {
     CartItem: () => import('~/components/Cart/CartItem.vue'),
